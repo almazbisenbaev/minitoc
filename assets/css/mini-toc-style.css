@@ -1,0 +1,18 @@
+.minitoc {
+    background-color: var(--minitoc-bg-color, #ffffff11);
+    border: 1px solid var(--minitoc-border-color, #ffffff11);
+    border-radius: var(--minitoc-border-radius, 10px);
+    padding: var(--minitoc-padding, 20px);
+    margin: var(--minitoc-margin, 1em 0);
+    width: 100%;
+}
+
+.minitoc ul {
+    list-style-type: none;
+    padding: var(--minitoc-ul-padding, 20px);
+}
+
+.minitoc a {
+    color: var(--minitoc-link-color, red);
+    text-decoration: none;
+}
