@@ -51,9 +51,57 @@ class Mini_TOC_Settings {
         );
 
         add_settings_field(
-            'mini_toc_css_variables',
-            'CSS Variables',
-            array($this, 'css_variables_callback'),
+            'mini_toc_bg_color',
+            'Background Color',
+            array($this, 'bg_color_callback'),
+            'mini-toc-settings',
+            'mini_toc_main_section'
+        );
+
+        add_settings_field(
+            'mini_toc_border_color',
+            'Border Color',
+            array($this, 'border_color_callback'),
+            'mini-toc-settings',
+            'mini_toc_main_section'
+        );
+
+        add_settings_field(
+            'mini_toc_border_radius',
+            'Border Radius',
+            array($this, 'border_radius_callback'),
+            'mini-toc-settings',
+            'mini_toc_main_section'
+        );
+
+        add_settings_field(
+            'mini_toc_padding',
+            'Padding',
+            array($this, 'padding_callback'),
+            'mini-toc-settings',
+            'mini_toc_main_section'
+        );
+
+        add_settings_field(
+            'mini_toc_margin',
+            'Margin',
+            array($this, 'margin_callback'),
+            'mini-toc-settings',
+            'mini_toc_main_section'
+        );
+
+        add_settings_field(
+            'mini_toc_ul_padding',
+            'UL Padding',
+            array($this, 'ul_padding_callback'),
+            'mini-toc-settings',
+            'mini_toc_main_section'
+        );
+
+        add_settings_field(
+            'mini_toc_link_color',
+            'Link Color',
+            array($this, 'link_color_callback'),
             'mini-toc-settings',
             'mini_toc_main_section'
         );
@@ -62,7 +110,13 @@ class Mini_TOC_Settings {
     public function sanitize_options($options) {
         $options['title'] = sanitize_text_field($options['title']);
         $options['heading_level'] = intval($options['heading_level']);
-        $options['css_variables'] = sanitize_textarea_field($options['css_variables']);
+        $options['bg_color'] = sanitize_hex_color($options['bg_color']);
+        $options['border_color'] = sanitize_hex_color($options['border_color']);
+        $options['border_radius'] = sanitize_text_field($options['border_radius']);
+        $options['padding'] = sanitize_text_field($options['padding']);
+        $options['margin'] = sanitize_text_field($options['margin']);
+        $options['ul_padding'] = sanitize_text_field($options['ul_padding']);
+        $options['link_color'] = sanitize_hex_color($options['link_color']);
         return $options;
     }
 
@@ -99,22 +153,74 @@ class Mini_TOC_Settings {
         <?php
     }
 
-    public function css_variables_callback() {
-        $options = get_option('mini_toc_options', array('css_variables' => ''));
+    public function bg_color_callback() {
+        $options = get_option('mini_toc_options', array('bg_color' => '#ffffff11'));
         ?>
-        <textarea name="mini_toc_options[css_variables]" rows="10" cols="50"><?php echo esc_textarea($options['css_variables']); ?></textarea>
+        <input type="text" name="mini_toc_options[bg_color]" value="<?php echo esc_attr($options['bg_color']); ?>" />
+        <?php
+    }
+
+    public function border_color_callback() {
+        $options = get_option('mini_toc_options', array('border_color' => '#ffffff11'));
+        ?>
+        <input type="text" name="mini_toc_options[border_color]" value="<?php echo esc_attr($options['border_color']); ?>" />
+        <?php
+    }
+
+    public function border_radius_callback() {
+        $options = get_option('mini_toc_options', array('border_radius' => '10px'));
+        ?>
+        <input type="text" name="mini_toc_options[border_radius]" value="<?php echo esc_attr($options['border_radius']); ?>" />
+        <?php
+    }
+
+    public function padding_callback() {
+        $options = get_option('mini_toc_options', array('padding' => '20px'));
+        ?>
+        <input type="text" name="mini_toc_options[padding]" value="<?php echo esc_attr($options['padding']); ?>" />
+        <?php
+    }
+
+    public function margin_callback() {
+        $options = get_option('mini_toc_options', array('margin' => '1em 0'));
+        ?>
+        <input type="text" name="mini_toc_options[margin]" value="<?php echo esc_attr($options['margin']); ?>" />
+        <?php
+    }
+
+    public function ul_padding_callback() {
+        $options = get_option('mini_toc_options', array('ul_padding' => '20px'));
+        ?>
+        <input type="text" name="mini_toc_options[ul_padding]" value="<?php echo esc_attr($options['ul_padding']); ?>" />
+        <?php
+    }
+
+    public function link_color_callback() {
+        $options = get_option('mini_toc_options', array('link_color' => 'red'));
+        ?>
+        <input type="text" name="mini_toc_options[link_color]" value="<?php echo esc_attr($options['link_color']); ?>" />
         <?php
     }
 
     public function get_css_variables() {
-        $options = get_option('mini_toc_options', array('css_variables' => ''));
-        $css_variables = array();
-        $lines = explode("\n", $options['css_variables']);
-        foreach ($lines as $line) {
-            list($key, $value) = explode(':', $line, 2);
-            $css_variables[trim($key)] = trim($value);
-        }
-        return $css_variables;
+        $options = get_option('mini_toc_options', array(
+            'bg_color' => '#ffffff11',
+            'border_color' => '#ffffff11',
+            'border_radius' => '10px',
+            'padding' => '20px',
+            'margin' => '1em 0',
+            'ul_padding' => '20px',
+            'link_color' => 'red'
+        ));
+        return array(
+            '--minitoc-bg-color' => $options['bg_color'],
+            '--minitoc-border-color' => $options['border_color'],
+            '--minitoc-border-radius' => $options['border_radius'],
+            '--minitoc-padding' => $options['padding'],
+            '--minitoc-margin' => $options['margin'],
+            '--minitoc-ul-padding' => $options['ul_padding'],
+            '--minitoc-link-color' => $options['link_color'],
+        );
     }
 
     public function get_option($key, $default = null) {
